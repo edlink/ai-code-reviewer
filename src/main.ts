@@ -24,7 +24,7 @@ interface PRDetails {
 }
 
 async function getPRDetails(): Promise<PRDetails> {
-  console.log('getPRDetails');
+  console.log("getPRDetails");
   const { repository, number } = JSON.parse(
     readFileSync(process.env.GITHUB_EVENT_PATH || "", "utf8")
   );
@@ -83,7 +83,7 @@ function createPrompt(file: File, chunk: Chunk, prDetails: PRDetails): string {
   return `Your task is to review pull requests. Instructions:
 - Provide the response in following JSON format:  {"reviews": [{"lineNumber":  <line_number>, "reviewComment": "<review comment>"}]}
 - Do not give positive comments or compliments.
-- Provide comments and suggestions ONLY if there is something to improve, otherwise "reviews" should be an empty array.
+- Provide comments and suggestions ONLY if there is something that looks like an error in the code, otherwise "reviews" should be an empty array.
 - Write the comment in GitHub Markdown format.
 - Use the given description only for the overall context and only comment the code.
 - IMPORTANT: NEVER suggest adding comments to the code.
@@ -137,7 +137,7 @@ async function getAIResponse(prompt: string): Promise<Array<{
     });
 
     const res = response.choices[0].message?.content?.trim() || "{}";
-    console.log('getAIResponse');
+    console.log("getAIResponse");
     console.log(res);
     return JSON.parse(res).reviews;
   } catch (error) {
@@ -184,7 +184,7 @@ async function createReviewComment(
 async function main() {
   const prDetails = await getPRDetails();
   let diff: string | null;
-  console.log('187');
+  console.log("187");
   const eventData = JSON.parse(
     readFileSync(process.env.GITHUB_EVENT_PATH ?? "", "utf8")
   );
